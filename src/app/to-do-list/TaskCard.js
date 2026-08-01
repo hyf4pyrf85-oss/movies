@@ -78,7 +78,7 @@ export function TaskCard(props) {
       <div className="buttons">
         {!task.done && (
           <button className="editButton" onClick={handleEdit}>
-            Edit
+            {isEdit ? "Save" : "Edit"}
           </button>
         )}
 
