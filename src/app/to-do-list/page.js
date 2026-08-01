@@ -27,7 +27,7 @@ export default function Page() {
   };
 
   const filteredTasks = tasks.filter((task) => {
-    if (filter === "left") {
+    if (filter === "active") {
       return !task.done;
     }
 
@@ -38,9 +38,12 @@ export default function Page() {
     return true;
   });
 
+  const completedTasks = tasks.filter((task) => task.done).length;
+  const activeTasks = tasks.filter((task) => !task.done).length;
+
   return (
     <div className="container">
-      <h1>To Do List</h1>
+      <h1>My Tasks</h1>
 
       <div className="inputRow">
         <input
@@ -57,12 +60,16 @@ export default function Page() {
           placeholder="Add a task..."
         />
 
-        <button className="button" onClick={handleAdd}>
-          ADD
+        <button
+          className="button"
+          onClick={handleAdd}
+          disabled={inputValue.trim() === ""}
+        >
+          ➕ Add
         </button>
       </div>
 
-      <div className="filterButtons filters buttons">
+      <div className="filterButtons filters">
         <button
           className={filter === "all" ? "activeFilter" : ""}
           onClick={() => setFilter("all")}
@@ -71,10 +78,10 @@ export default function Page() {
         </button>
 
         <button
-          className={filter === "left" ? "activeFilter" : ""}
-          onClick={() => setFilter("left")}
+          className={filter === "active" ? "activeFilter" : ""}
+          onClick={() => setFilter("active")}
         >
-          Left
+          Active
         </button>
 
         <button
@@ -91,9 +98,46 @@ export default function Page() {
         )}
       </div>
 
-      {filteredTasks.map((task) => (
-        <TaskCard key={task.id} task={task} tasks={tasks} setTasks={setTasks} />
-      ))}
+      <div className="taskList">
+        {filteredTasks.length === 0 ? (
+          <div className="emptyState">
+            <p>No tasks found.</p>
+          </div>
+        ) : (
+          filteredTasks.map((task, index) => (
+            <TaskCard
+              key={task.id}
+              number={index + 1}
+              task={task}
+              tasks={tasks}
+              setTasks={setTasks}
+            />
+          ))
+        )}
+      </div>
+
+      <div className="stats">
+        <p>
+          <br />
+          Total
+          <br />
+          {tasks.length}
+        </p>
+
+        <p>
+          <br />
+          Active
+          <br />
+          {activeTasks}
+        </p>
+
+        <p>
+          <br />
+          Completed
+          <br />
+          {completedTasks}
+        </p>
+      </div>
     </div>
   );
 }

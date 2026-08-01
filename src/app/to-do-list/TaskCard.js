@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 export function TaskCard(props) {
-  const { task, tasks, setTasks } = props;
+  const { task, tasks, setTasks, number } = props;
 
   const [isEdit, setIsEdit] = useState(false);
   const [editValue, setEditValue] = useState(task.value);
@@ -29,7 +29,7 @@ export function TaskCard(props) {
     setIsEdit(false);
   };
 
-  const handleDone = () => {
+  const handleCompleted = () => {
     const updatedTasks = tasks.map((value) => {
       if (value.id === task.id) {
         return {
@@ -52,30 +52,38 @@ export function TaskCard(props) {
 
   return (
     <div className="task">
-      {isEdit ? (
-        <input
-          className="editInput"
-          value={editValue}
-          onChange={(event) => {
-            setEditValue(event.target.value);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              handleEdit();
-            }
-          }}
-        />
-      ) : (
-        <span className={task.done ? "completed" : ""}>{task.value}</span>
-      )}
+      <div className="taskLeft">
+        <div className={task.done ? "statusCircle done" : "statusCircle"}></div>
+
+        {isEdit ? (
+          <input
+            className="editInput"
+            value={editValue}
+            onChange={(event) => {
+              setEditValue(event.target.value);
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                handleEdit();
+              }
+            }}
+          />
+        ) : (
+          <span className={task.done ? "completed" : ""}>
+            {number}. {task.value}
+          </span>
+        )}
+      </div>
 
       <div className="buttons">
-        <button className="editButton" onClick={handleEdit}>
-          {isEdit ? "Save" : "Edit"}
-        </button>
+        {!task.done && (
+          <button className="editButton" onClick={handleEdit}>
+            Edit
+          </button>
+        )}
 
-        <button className="doneButton" onClick={handleDone}>
-          {task.done ? "Undo" : "Done"}
+        <button className="doneButton" onClick={handleCompleted}>
+          {task.done ? "↩ Undo" : "Completed"}
         </button>
 
         <button className="deleteButton" onClick={handleDelete}>
